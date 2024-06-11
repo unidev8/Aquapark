@@ -7,7 +7,6 @@ using static ToonyColorsPro.ShaderGenerator.Enums;
 public class Coin : MonoBehaviour
 {
     //public event Action<int> OnScoreUp;
-    private const int score = 10;
     //public static Coin instance;
     private bool isHited = false;
     private float flySpeed = 100f;
@@ -33,9 +32,9 @@ public class Coin : MonoBehaviour
         {
             //Player.Instance.OnScoreUp?.Invoke();
             if (other.gameObject.tag == "Player")
-                other.gameObject.transform.parent.GetComponent<Player>().score += score;
+                other.gameObject.transform.parent.GetComponent<Player>().score += ConstVars.scoreinc;
             else
-                other.gameObject.transform.parent.GetComponent<AI>().score += score;
+                other.gameObject.transform.parent.GetComponent<AI>().score += ConstVars.scoreinc;
             isHited = true;
             //Debug.Log("Coin Trigger Score = " + Player.Instance.score);
             GameObject.Destroy(this.gameObject, 1f);

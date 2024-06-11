@@ -1,11 +1,11 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics.Contracts;
 using UnityEngine;
 
 
 namespace PathCreation.Examples
 {
-
     public class AI : MonoBehaviour
     {
         [SerializeField] private Vector2 deviationChangeTimeRange = new Vector2();
@@ -24,6 +24,8 @@ namespace PathCreation.Examples
 
         public float finishDeviation;
         public int score = 0;
+        public string strName = "";
+
         private void OnEnable()
         {
             _movements = GetComponent<AIPathFollower>();
@@ -38,8 +40,9 @@ namespace PathCreation.Examples
         // Update is called once per frame
         void Update()
         {
-           // if (!Movements.Moving) return;
-           if(!_movements.isfinish && !player._movements.isfinish)
+            if (GameCanvasControl.Instance.gameState == GameState.CharaterSelection) return;
+            // if (!Movements.Moving) return;
+            if (!_movements.isfinish && !player._movements.isfinish)
             {
                 if (_timer > _currentDeviationDuration && _movements.isStart && _movements.deviationModifAuthorization && !_movements.isfinish)
                 {
@@ -47,7 +50,7 @@ namespace PathCreation.Examples
 
                     _targetDeviation = Random.Range(-_maxDeviation, _maxDeviation);
 
-                    _targetMaxSpeed = Random.Range(initMaxSpeed - 1f, initMaxSpeed + 1f);
+                    _targetMaxSpeed = Random.Range(initMaxSpeed - 2f, initMaxSpeed + 2f);
 
                     if (_movements.onPath)
                     {
@@ -59,11 +62,9 @@ namespace PathCreation.Examples
 
                         if ((_movements.distanceTravelled - player._movements.distanceTravelled) > 15 && !_movements.isfinish)
                         {
-
                             _targetMaxSpeed = initMaxSpeed - 3;
                         }
                     }
-
                     else
                     {
                         if (Mathf.Abs((player._movements.distanceTravelled - _movements.distanceTravelled)) > 80)
@@ -75,8 +76,6 @@ namespace PathCreation.Examples
                             _targetMaxSpeed = initMaxSpeed + 10;
                         }
                     }
-
-
                     _timer = 0;
                 }
 
@@ -84,45 +83,32 @@ namespace PathCreation.Examples
                     _movements.deviation = Mathf.Lerp(_movements.deviation, _targetDeviation, dragControl * Time.deltaTime);
                 _movements.MaxSpeed = Mathf.Lerp(_movements.MaxSpeed, _targetMaxSpeed, dragControl * 4 * Time.deltaTime);
 
-
                 if (_movements.deviationModifAuthorization)
                 {
                     _timer += Time.deltaTime;
                 }
-
-
                 else
                 {
                     _timer = 0;
                 }
             }
 
-
             if(player._movements.isfinish && !_movements.isfinish)
             {
-
                 if (_timer > _currentDeviationDuration && _movements.isStart && _movements.deviationModifAuthorization )
                 {
-
                     if (_movements.onPath)
                     {
                         _movements.distanceTravelled = player._movements.distanceTravelled - Random.Range(130, 140);
                     }
-
                     else
                     {
-
                         _movements.distanceTravelled = player._movements.distanceTravelled - Random.Range(130, 140);
                         _movements.distanceCovered = (_movements.distanceTravelled - _movements.startDistance);
                         _movements.Land();
-
-
                     }
 
-
                     _timer = 0;
-
-
                 }
                 if (_movements.deviationModifAuthorization && _movements.isStart && _movements.onPath && !_movements.isfinish && !player._movements.isfinish)
                     _movements.deviation = Mathf.Lerp(_movements.deviation, _targetDeviation, dragControl * Time.deltaTime);
@@ -133,25 +119,17 @@ namespace PathCreation.Examples
                 {
                     _timer += Time.deltaTime;
                 }
-
-
                 else
                 {
                     _timer = 0;
                 }
-
             }
-
 
             if (_movements.isfinish)
             {
-
                 _targetDeviation = Mathf.Lerp(_targetDeviation, finishDeviation, Time.deltaTime * 2.25f);
-                _movements.deviation = _targetDeviation;
-
-            
+                _movements.deviation = _targetDeviation;            
             }
-
            
         }
     }

@@ -43,26 +43,21 @@ namespace PathCreation.Examples
                         if (other.transform.CompareTag("Player"))
                         {
                             if(!other.gameObject.GetComponentInParent<PathFollower>().isfinish && !movementsComponent.isfinish && !other.gameObject.GetComponentInParent<PathFollower>().landBoost)
-                            {
-                                movementsComponent.speed = movementsComponent.MaxSpeed;
+                            {                                
                                 //movementsComponent.speed = other.gameObject.GetComponentInParent<PathFollower>().MaxSpeed;
                                 //movementsComponent.speed = movementsComponent.MaxSpeed;
-                                other.gameObject.GetComponentInParent<PathFollower>().speed = movementsComponent.speed - 4.5f;
+                                other.gameObject.GetComponentInParent<PathFollower>().speed = movementsComponent.speed - 5f;
                                 movementsComponent.ApplyTempMultiplicator(backBumpSpeedMultiplicator, backBumpDuration);
 
                                 HapticManager.Instance.PlayHaptic(HapticType.MediumImpact);
                             }
-
                             else if(!other.gameObject.GetComponentInParent<PathFollower>().isfinish && !movementsComponent.isfinish && other.gameObject.GetComponentInParent<PathFollower>().landBoost)
                             {
                                 movementsComponent.StartFly();
-
+                                other.gameObject.transform.parent.GetComponent<Player>().score += ConstVars.scoreinc;
                                 HapticManager.Instance.PlayHaptic(HapticType.MediumImpact);
-                            }
-
-                          
+                            }                          
                         }
-
                         else
                         {
                             if (!other.gameObject.GetComponentInParent<AIPathFollower>().isfinish && !movementsComponent.isfinish && !other.gameObject.GetComponentInParent<AIPathFollower>().landBoost)
@@ -72,14 +67,10 @@ namespace PathCreation.Examples
                                 other.gameObject.GetComponentInParent<AIPathFollower>().speed = movementsComponent.speed - 4.5f;
                                 movementsComponent.ApplyTempMultiplicator(backBumpSpeedMultiplicator, backBumpDuration);
                             }
-
                             else if (!other.gameObject.GetComponentInParent<AIPathFollower>().isfinish && !movementsComponent.isfinish && other.gameObject.GetComponentInParent<AIPathFollower>().landBoost)
                             {
                                 movementsComponent.StartFly();
-
                             }
-
-
                         }
 
                        
@@ -91,10 +82,9 @@ namespace PathCreation.Examples
                         {
                             PathFollower otherCar = other.gameObject.GetComponentInParent<PathFollower>();
 
-                          
+                            other.gameObject.transform.parent.GetComponent<Player>().score += ConstVars.scoreinc;
 
-
-                            if(!otherCar.landBoost)
+                            if (!otherCar.landBoost)
                             {
                                 SideBumper(otherCar);
                             }
@@ -105,19 +95,16 @@ namespace PathCreation.Examples
                             else if(otherCar.distanceTravelled < movementsComponent.distanceTravelled && otherCar.landBoost)
                             {
                                 movementsComponent.StartFly();
-                            }
-                           
+                                //other.gameObject.transform.parent.GetComponent<Player>().score += ConstVars.scoreinc;
+                            }                           
 
                             otherCar.dropspark.Play();
 
                             DOVirtual.DelayedCall(0.1f, () =>
                             {
-
                                 otherCar.dropspark.Stop();
-
                             });
                         }
-
                         else
                         {
                             AIPathFollower otherCar = other.gameObject.GetComponentInParent<AIPathFollower>();
@@ -128,34 +115,27 @@ namespace PathCreation.Examples
 
                             DOVirtual.DelayedCall(0.1f, () =>
                             {
-
+                                other.gameObject.transform.parent.GetComponent<Player>().score += ConstVars.scoreinc;
                                 otherCar.dropspark.Stop();
-
                             });
                         }
-
-
-
-
-
                         break;
 
                     case BumperType.RightBumper:
                         if (other.transform.CompareTag("Player"))
                         {
                             PathFollower otherCar = other.gameObject.GetComponentInParent<PathFollower>();
+                            other.gameObject.transform.parent.GetComponent<Player>().score += ConstVars.scoreinc;
+
                             SideBumper(otherCar);
 
                             otherCar.dropspark.Play();
 
                             DOVirtual.DelayedCall(0.1f, () =>
                             {
-
                                 otherCar.dropspark.Stop();
-
                             });
                         }
-
                         else
                         {
                             AIPathFollower otherCar = other.gameObject.GetComponentInParent<AIPathFollower>();
@@ -166,20 +146,14 @@ namespace PathCreation.Examples
 
                             DOVirtual.DelayedCall(0.1f, () =>
                             {
-
                                 otherCar.dropspark.Stop();
-
                             });
                         }
                         break;
                 }
             }
 
-
         }
-
-
-
 
         //Side bumpers moves the slowest character of the collision out of the bounds of the other
         void SideBumper(PathFollower other)

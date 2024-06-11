@@ -6,21 +6,16 @@ using TMPro;
 
 namespace PathCreation.Examples
 {
-
     public class RaceManager : MonoBehaviour
     {
-
         public DistanceCounter[] allDistance;
-
         public bool canSort;
 
-       
-
         void Start()
-        {
-           
+        {           
             canSort = true;
         }
+
         // Update is called once per frame
         void Update()
         {
@@ -28,11 +23,6 @@ namespace PathCreation.Examples
             {
                 BubbleSort(allDistance);
             }
-
-          
-
-
-
         }
 
         public void BubbleSort(DistanceCounter[] dis)
@@ -48,8 +38,6 @@ namespace PathCreation.Examples
                         dis[j] = temp;
                     }
                 }
-
-
             }
 
             allDistance[0].text.text = "1st";

@@ -118,18 +118,12 @@ namespace PathCreation.Examples
 
                 rot.eulerAngles = Vector3.zero;
                 transform.SetPositionAndRotation(EvaluatedPosition, rot);
-
             }
-
         }
-
-
-
-
 
         void LateUpdate()
         {
-            //if (GameCanvasControl.Instance.gameState == GameState.CharaterSelection) return;
+            if (GameCanvasControl.Instance.gameState == GameState.CharaterSelection) return;
 
             RaycastHit hit;
 
@@ -158,16 +152,12 @@ namespace PathCreation.Examples
 
                 transform.SetPositionAndRotation(EvaluatedPosition, rot1);
 
-
-
                 if (Physics.Raycast(EvaluatedPosition + Vector3.up + transform.right * deviation * tobogganWidth / 2f, Vector3.down, out hit, 5,
                   1 << 9))
                 {
                     Vector3 EvaluatedPosition1;
                     EvaluatedPosition1 = hit.point + hit.normal * offsetFromGround;
                     Car.SetPositionAndRotation(EvaluatedPosition1, rot);
-
-
                 }
             }
 
@@ -196,9 +186,6 @@ namespace PathCreation.Examples
                 offsetFromGround = .4f * Mathf.Abs(deviation);
                 transform.SetPositionAndRotation(EvaluatedPosition, rot1);
 
-
-
-
                 if (Physics.Raycast(EvaluatedPosition + Vector3.up + transform.right * deviation * tobogganWidth / 2f, Vector3.down, out hit, 5,
                   1 << 9))
                 {
@@ -207,10 +194,7 @@ namespace PathCreation.Examples
 
                     Car.transform.SetPositionAndRotation(EvaluatedPosition1, rot);
 
-
                 }
-
-
 
                 if (Mathf.Abs(deviation) > 0.6f)
                 {
@@ -225,18 +209,14 @@ namespace PathCreation.Examples
                     spark.Stop();
                 }
 
-
                 if (Mathf.Abs(deviation) > ejectionThresold && canFly)
                 {
-
                     StartFly();
-
                 }
             }
 
             else if (!onPath) //The character is flying
             {
-
                 if (!istransation)
                 {
                     fallSpeed += .1f * Time.deltaTime;
@@ -269,9 +249,7 @@ namespace PathCreation.Examples
             }
 
             distance.distance = distanceTravelled;
-
         }
-
 
 
         public IEnumerator MakePlayerFly()
@@ -294,23 +272,17 @@ namespace PathCreation.Examples
                 Vector3 nextPosition = new Vector3(childPosition.x, currentYPos, childPosition.z) + Vector3.up * ejectionForce;
                 transform.position = Vector3.Lerp(transform.position, nextPosition, t);
                 Car.localPosition = Vector3.Lerp(Car.localPosition, childMiddlePosition, t);
-               
-
-               
+                              
                 yield return Time.deltaTime;
             }
 
             istransation = false;
             nos.gameObject.SetActive(true);
-
-
-
         }
 
 
         public void StartFly()
         {
-
             //X rotation axis reset
             Vector3 newRot = transform.eulerAngles;
             newRot.x = 0;
@@ -324,7 +296,6 @@ namespace PathCreation.Examples
             onPath = false;
             istransation = true;
 
-
             Car.transform.DOMove(Car.transform.position + (Mathf.Sign(deviation) * transform.right * 2 + Vector3.up / 1.35f + Car.transform.forward * 6) * ejectionForce, 1.25f).OnComplete(() =>
             {
                 transform.position = Car.transform.position;
@@ -336,18 +307,12 @@ namespace PathCreation.Examples
 
             DOVirtual.DelayedCall(3f, () =>
             {
-
                 fire.gameObject.SetActive(false);
-
-
             });
-
         }
-
 
         public void StartFlyRamp()
         {
-
             //X rotation axis reset
             Vector3 newRot = transform.eulerAngles;
             newRot.x = 0;
@@ -360,7 +325,6 @@ namespace PathCreation.Examples
             onPath = false;
             istransation = true;
 
-
             Car.transform.DOMove(Car.transform.position + ( Vector3.up / 1.35f + Car.transform.forward * 4) * ejectionForce, 1.25f).OnComplete(() =>
             {
                 transform.position = Car.transform.position;
@@ -368,17 +332,12 @@ namespace PathCreation.Examples
                 Car.transform.DOLocalRotate(Vector3.zero, .75f);
                 istransation = false;
             });
-
-          
-
         }
-
 
         void OnPathChanged()
         {
             distanceTravelled = pathCreator.path.GetClosestDistanceAlongPath(transform.position);
         }
-
 
         public void ApplyDeviationStop(float duration) { StartCoroutine(DeviationStop(duration)); }
         private IEnumerator DeviationStop(float duration)
@@ -386,9 +345,7 @@ namespace PathCreation.Examples
             deviationModifAuthorization = false;
             yield return new WaitForSeconds(duration);
             deviationModifAuthorization = true;
-
         }
-
 
         public void ApplyTempDeviation(float modification, float duration) { StartCoroutine(TempDeviation(modification, duration)); }
         private IEnumerator TempDeviation(float modification, float duration)
@@ -403,24 +360,23 @@ namespace PathCreation.Examples
                 float delta = Time.fixedDeltaTime * (modification / duration);
                 deviation += delta;
                 timer += Time.fixedDeltaTime;
-                yield return new WaitForFixedUpdate();
-              
-
+                yield return new WaitForFixedUpdate();   
             }
            // yield return new WaitForSeconds(2);
             //deviationModifAuthorization = true;
             dropspark.Stop();
         }
 
-        public void ApplyTempMultiplicator(float multiplicator, float duration) { StartCoroutine(TempMultiplicator(multiplicator, duration)); }
+        public void ApplyTempMultiplicator(float multiplicator, float duration)
+        {
+            StartCoroutine(TempMultiplicator(multiplicator, duration));
+        }
         private IEnumerator TempMultiplicator(float multiplicator, float duration)
         {
-
             speedMultiplicator += (multiplicator - 1f);
 
             nos.gameObject.SetActive(true);
             dropspark.Play();
-
 
             yield return new WaitForSeconds(duration);
 
@@ -434,7 +390,7 @@ namespace PathCreation.Examples
 
         private IEnumerator CountDown()
         {
-            yield return new WaitForSeconds(4f);
+            yield return new WaitForSeconds(0f);
             isStart = true;
             backLight1.emitting = true;
             backLight2.emitting = true;
@@ -460,8 +416,7 @@ namespace PathCreation.Examples
                 nos.gameObject.SetActive(false);
                 dropspark.Stop();
                 landBoost = false;
-            });
-           
+            });           
 
 
             DOVirtual.DelayedCall(0.051f, () =>
@@ -471,8 +426,6 @@ namespace PathCreation.Examples
                 backLight1.emitting = true;
                 backLight2.emitting = true;
                 dropspark.Play();
-
-             
 
             });
         }

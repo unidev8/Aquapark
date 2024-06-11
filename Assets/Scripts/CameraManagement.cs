@@ -11,7 +11,7 @@ public class CameraManagement : MonoBehaviour
     CinemachineTransposer cinemachineTransposer;
 
     IEnumerator FlyCoroutine, LandCoroutine;
-    const float fCameraDistance = 12f;
+    const float fCameraDistance = 9f;
 
     private void Awake()
     {
@@ -20,11 +20,10 @@ public class CameraManagement : MonoBehaviour
         cinemachineTransposer = cinemachineCam.GetCinemachineComponent<CinemachineTransposer>();
     }
 
-
     private void Start()
     {
-        FlyCoroutine = ChangeCamOffset(new Vector3(0, fCameraDistance, -fCameraDistance), .3f);
-        LandCoroutine = ChangeCamOffset(new Vector3(0, fCameraDistance, -fCameraDistance), 0);
+        FlyCoroutine = ChangeCamOffset(new Vector3(0, fCameraDistance, -fCameraDistance -3f), .3f);
+        LandCoroutine = ChangeCamOffset(new Vector3(0, fCameraDistance, -fCameraDistance -3f), 0);
     }
 
     public void RaceFinish(Vector3 newVal, float startDelay) { StartCoroutine(FinishActivity(newVal, startDelay)); }
@@ -45,9 +44,7 @@ public class CameraManagement : MonoBehaviour
             yield return null;
 
         }
-
         cinemachineTransposer.m_FollowOffset = newVal;
-
     }
 
 
@@ -64,9 +61,7 @@ public class CameraManagement : MonoBehaviour
             yield return null;
 
         }
-
         cinemachineTransposer.m_FollowOffset = newVal;
-
     }
 
 
@@ -74,7 +69,6 @@ public class CameraManagement : MonoBehaviour
 
     IEnumerator CameraShake(float intensity, float time)
     {
-
         float t = 0;
         t += time;
         cinemachineBasicMultiChannelPerlin.m_AmplitudeGain = intensity;
@@ -84,7 +78,6 @@ public class CameraManagement : MonoBehaviour
             t -= Time.deltaTime;
             yield return Time.deltaTime;
         }
-
         cinemachineBasicMultiChannelPerlin.m_AmplitudeGain = 0f;
 
     }
@@ -97,10 +90,9 @@ public class CameraManagement : MonoBehaviour
         if (fly)
         {
             GameManager.Instance.amplifyMotion.enabled = false;
-            FlyCoroutine = ChangeCamOffset(new Vector3(0, fCameraDistance, -fCameraDistance), .3f);
+            FlyCoroutine = ChangeCamOffset(new Vector3(0, fCameraDistance, -fCameraDistance - 3f), .3f);
             StopCoroutine(LandCoroutine);
             StartCoroutine(FlyCoroutine);
-
 
             cinemachineCam.m_Lens.FarClipPlane = 500;
             while (t < 1)
@@ -111,9 +103,8 @@ public class CameraManagement : MonoBehaviour
             }
         }
         else
-        {
-            
-            LandCoroutine = ChangeCamOffset(new Vector3(0, fCameraDistance, -fCameraDistance), 0);
+        {            
+            LandCoroutine = ChangeCamOffset(new Vector3(0, fCameraDistance, -fCameraDistance -3f), 0);
             StopCoroutine(FlyCoroutine);
             StartCoroutine(LandCoroutine);
 

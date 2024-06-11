@@ -4,6 +4,7 @@ using UnityEngine;
 using TMPro;
 using UnityEngine.UI;
 using DG.Tweening;
+using System.Linq;
 
 namespace PathCreation.Examples
 {
@@ -28,11 +29,9 @@ namespace PathCreation.Examples
         public GameObject victoryImage;
 
 
-        public List<string> NameList = new List<string>();
+        public List<AI> AIList = new List<AI>();
 
         public bool finishOnce;
-
-
 
 
         private void Awake()
@@ -46,29 +45,19 @@ namespace PathCreation.Examples
 
         }
 
-        void Start()
-        {
-
-        }
-
-
         void Update()
-        {
-     
+        {     
             playerPos.text = playerText.text;
-
 
             float finishDistance = playerPath.pathCreator.path.GetClosestDistanceAlongPath(finish.transform.position);
 
             fillBar.fillAmount = playerPath.distanceTravelled / finishDistance;
-
 
             if(playerPath.isfinish && !finishOnce)
             {
                 finishOnce = true;
                 SetLeaderBoard();
             }
-
         }
 
 
@@ -93,7 +82,8 @@ namespace PathCreation.Examples
         public void SetLeaderBoard()
         {
             leaders[playerDistanceCounter.rank - 1].sprite = GreenBg;
-            leaders[playerDistanceCounter.rank - 1].transform.GetChild(1).GetComponent<TextMeshProUGUI>().text = "Player";
+            leaders[playerDistanceCounter.rank - 1].transform.GetChild(1).GetComponent<TextMeshProUGUI>().text = "Player" + " : " + 
+                Player.Instance.GetComponent <Player>().score;
 
             if(playerDistanceCounter.rank<=3)
             {
@@ -104,15 +94,17 @@ namespace PathCreation.Examples
                 victoryImage.SetActive(false);
             }
 
-            var uniqueRandomList = GetUniqueRandomElements(NameList, 6);
+            AIList = AIList.OrderBy(obj => obj.gameObject.GetComponent<DistanceCounter>().rank).ToList();
+            //var uniqueRandomList = GetUniqueRandomElements(NameList, 6);
 
-
+            int j = 0;
             for (int i = 0; i < leaders.Length; i++)
             {
                 if(i != playerDistanceCounter.rank - 1)
                 {
-                    leaders[i].transform.GetChild(1).GetComponent<TextMeshProUGUI>().text = uniqueRandomList[i];
-                }
+                    leaders[i].transform.GetChild(1).GetComponent<TextMeshProUGUI>().text = AIList[j].strName + " : " + AIList [j].score;
+                    j++;
+                }                
             }
 
             for (int i = 0; i < leaders.Length; i++)

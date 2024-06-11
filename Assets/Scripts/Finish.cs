@@ -16,7 +16,9 @@ public class Finish : MonoBehaviour
     public int playerCount=0;
 
     public RaceManager raceManager;
-
+    
+    private float finishStartSpeed = 64f;
+    private float eachCharacterDiffRatio = 5f;
     private void OnTriggerEnter(Collider other)
     {
         if (other.transform.CompareTag("Player"))
@@ -24,7 +26,7 @@ public class Finish : MonoBehaviour
             other.GetComponent<BoxCollider>().enabled = false;
             playerCount++;
             raceManager.canSort = false;
-            GameManager.Instance.cameraManagement.RaceFinish(new Vector3(5f, 9f, -10f), 0f);
+            GameManager.Instance.cameraManagement.RaceFinish(new Vector3(4f, 16f, -20f), 0f);
 
 
             PathFollower movement = other.GetComponentInParent<PathFollower>();
@@ -32,18 +34,20 @@ public class Finish : MonoBehaviour
 
             movement.warpEffect.gameObject.SetActive(false);
 
+            //int rank = other.gameObject.transform.parent.GetComponent<DistanceCounter>().rank - 1;
             Vector3 playerFinishPoint = finishLineFinishPositions[playerCount - 1].position;
             float finishDistanceTravelled = movement.pathCreator.path.GetClosestDistanceAlongPath(playerFinishPoint);
-            movement.finishDistanceTravelled = finishDistanceTravelled;
-
+            movement.finishDistanceTravelled = finishDistanceTravelled;            
             movement.isfinish = true;
 
             if(playerCount <= 1) finishParticle.Play();
 
-            movement.MaxSpeed = 40f - 3f * playerCount;
+            movement.MaxSpeed = finishStartSpeed - eachCharacterDiffRatio * playerCount;
             movement.speed = movement.MaxSpeed;
-            GameCanvasControl.Instance.gameOverPanelControl.EnablePanel(GameState.LevelCompleted, 3f);
 
+            //Debug.Log("player name = " + other.gameObject.transform.parent.name + " || Speed = " + movement.speed + " || finishPoint = " + playerFinishPoint);
+
+            GameCanvasControl.Instance.gameOverPanelControl.EnablePanel(GameState.LevelCompleted, 3f);
             HapticManager.Instance.PlayHaptic(HapticType.Success);
 
         }
@@ -58,12 +62,16 @@ public class Finish : MonoBehaviour
             AI ai = movement.GetComponent<AI>();
             ai.finishDeviation = playerCount % 2 == 0 ? -.3f : .3f;
 
+            //int rank = other.gameObject.transform.parent.GetComponent<DistanceCounter>().rank - 1;
+
             Vector3 playerFinishPoint = finishLineFinishPositions[playerCount - 1].position;
             float finishDistanceTravelled = movement.pathCreator.path.GetClosestDistanceAlongPath(playerFinishPoint);
-            movement.finishDistanceTravelled = finishDistanceTravelled;
+            movement.finishDistanceTravelled = finishDistanceTravelled;            
 
-            movement.MaxSpeed = 120f - 3f * playerCount;
+            movement.MaxSpeed = finishStartSpeed - eachCharacterDiffRatio * playerCount;
             movement.speed = movement.MaxSpeed;
+
+            //Debug.Log("player name = " + other.gameObject.transform.parent.name + " || Speed = " + movement.speed + " || finishPoint = " + playerFinishPoint);
 
             movement.isfinish = true;
         }

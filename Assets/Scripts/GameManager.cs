@@ -17,13 +17,11 @@ public class GameManager : MonoBehaviour
     public AmplifyMotionEffect amplifyMotion;
     //public CinemachineSmoothPath cinemachineSmooth;
 
-
     private void Awake()
     {
         Instance = this;
         Application.targetFrameRate = 60;
         ConstructLine();
-
     }
 
     private void OnEnable()
@@ -46,7 +44,6 @@ public class GameManager : MonoBehaviour
                         j++;
                 }
             }
-
         }
 
         for (int i = 0; i < finish.finishLineWayPoints.Length; i++)
@@ -60,4 +57,9 @@ public class GameManager : MonoBehaviour
             path.bezierPath = bezierPath;
         }
     }
+}
+
+public static class ConstVars
+{
+   public static int scoreinc = 10;
 }

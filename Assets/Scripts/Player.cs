@@ -86,7 +86,7 @@ namespace PathCreation.Examples
 
         void Update()
         {
-            //if (GameCanvasControl.Instance.gameState == GameState.CharaterSelection) return;
+            if (GameCanvasControl.Instance.gameState == GameState.CharaterSelection) return;
 
             catchUpSpeed = Mathf.Clamp(_movements.speed/3f, 10f, 15f);
 
@@ -146,11 +146,9 @@ namespace PathCreation.Examples
                 targetDeviation = Mathf.Lerp(targetDeviation, finishDeviation, Time.deltaTime * releaseHardness / 2f);
                 _movements.deviation = targetDeviation;
             }
-
         }
 
         float targetRotation = 0f;
-
 
         void FlyRotation(float _mouseX)
         {
@@ -161,7 +159,6 @@ namespace PathCreation.Examples
                 if (_mouseX != 0)
                 {
                     targetRotation += _mouseX * releaseHardness * Time.deltaTime;
-
                 }
                 else
                 {

@@ -6,6 +6,10 @@ TagManager:
   tags:
   - Toboggan
   - Ai
+  - WaterRamp
+  - SpeedBooster
+  - Opponent
+  - Coin
   layers:
   - Default
   - TransparentFX
@@ -17,7 +21,7 @@ TagManager:
   - 
   - 
   - Toblagoon
-  - 
+  - Player
   - 
   - 
   - 

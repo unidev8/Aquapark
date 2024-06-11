@@ -39,7 +39,6 @@ public class GameOverPanelControl : MonoBehaviour
         Instance = this;
     }
 
-
     public void OnNextButtonPressed()
     {
         LevelLoader.Instance.LoadLevel();
@@ -60,11 +59,9 @@ public class GameOverPanelControl : MonoBehaviour
             LevelStateText.text = "level \n completed!";
 
             PlaynoobAnalyticsManager.Instance.SendLevelEnd(true);
-
         }
         else
         {
-
             GameCanvasControl.Instance.gameState = GameState.LevelFailed;
             tapToNextText.text = "tap to retry";
             NextButton.image.sprite = FailButtonSprite;
@@ -78,7 +75,6 @@ public class GameOverPanelControl : MonoBehaviour
 
         DOVirtual.DelayedCall(appearDelay, () =>
         {
-
             GameplayPanelControl.Instance.HidePanel();
             float delay = 0f;
 
@@ -119,7 +115,6 @@ public class GameOverPanelControl : MonoBehaviour
                 NextButton.gameObject.SetActive(true);
             }
         });
-
 
         gameObject.SetActive(true);
     }
